@@ -19,10 +19,14 @@ export function LegalPage({
     <div className="plain">
       <LogoDefs />
       <div className="col legal">
-        <a className="back" href="/">
-          <span aria-hidden="true">&larr;</span> Suite Level
-        </a>
-        <Logo className="logo" width={180} height={32} />
+        <div className="legal-head">
+          <a className="back" href="/">
+            <span aria-hidden="true">&larr;</span> Back to Suite Level
+          </a>
+          <a href="/" aria-label="Suite Level, home">
+            <Logo className="logo" width={180} height={32} />
+          </a>
+        </div>
         <h1>{title}</h1>
         <p className="updated">Last updated: {lastUpdated}</p>
         {children}
