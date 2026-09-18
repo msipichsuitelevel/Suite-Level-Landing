@@ -1,0 +1,3 @@
+# Matches the Suite Level client: CI pins Bun 1.3.5 and local tooling follows this file.
+[tools]
+bun = "1.3.5"

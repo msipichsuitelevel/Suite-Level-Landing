@@ -1,0 +1,14 @@
+{
+  "name": "Suite Level",
+  "short_name": "Suite Level",
+  "description": "The commercial real estate platform broker teams run their market on.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#F8FAFC",
+  "theme_color": "#333333",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

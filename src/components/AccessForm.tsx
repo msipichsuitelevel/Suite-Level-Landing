@@ -1,0 +1,222 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+import { ACCESS_REQUEST_ENDPOINT, COMPANY, IS_RECAPTCHA_V2, RECAPTCHA_VERSION } from '@/lib/site';
+import { executeV3, renderV2Widget, type V2Widget } from '@/lib/recaptcha';
+
+const RESTING = 'No contract required. Free during the beta.';
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+type Status = 'idle' | 'sending' | 'sent' | 'error';
+
+/**
+ * The access-request form. The address is posted to the Suite Level API, which
+ * records it, mints an invite token and emails it. The API is the only thing that
+ * can decide whether an address is new: it holds the unique constraint and the
+ * reCAPTCHA secret, so nothing here is trusted and nothing here is a check.
+ *
+ * Suite Level's key is reCAPTCHA **v2 invisible**, so there is no widget to tick.
+ * The challenge runs when the form is submitted and most visitors never see it;
+ * Google only interrupts when it is unsure. That is why the submit handler has to
+ * await a token rather than read one that is already sitting there.
+ */
+export function AccessForm() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<Status>('idle');
+  const [note, setNote] = useState(RESTING);
+  const [noteKind, setNoteKind] = useState<'' | 'err' | 'ok'>('');
+
+  // v2 mounts into this element. Invisible renders nothing into it; the checkbox
+  // variant draws its widget here.
+  const captchaRef = useRef<HTMLDivElement | null>(null);
+  const widget = useRef<V2Widget | null>(null);
+  const honeypot = useRef<HTMLInputElement | null>(null);
+
+  const say = (text: string, kind: '' | 'err' | 'ok' = '') => {
+    setNote(text);
+    setNoteKind(kind);
+  };
+
+  useEffect(() => {
+    if (!IS_RECAPTCHA_V2) return;
+    let cancelled = false;
+
+    // Rendered once, on mount, so the challenge is ready before anyone submits.
+    // Rendering on submit instead would add a visible delay to every request.
+    renderV2Widget(captchaRef.current!)
+      .then((w) => {
+        if (cancelled) return;
+        widget.current = w;
+      })
+      .catch(() => {
+        if (cancelled) return;
+        say(
+          `The spam check could not load. Disable your ad blocker and reload, or email ${COMPANY.email} and we will add you by hand.`,
+          'err',
+        );
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (status === 'sending') return;
+
+    const value = email.trim();
+    if (!EMAIL_RE.test(value)) {
+      say('That email address looks incomplete. Check it and try again.', 'err');
+      return;
+    }
+    // Hidden from people, filled in by the simplest bots. Answer as though it
+    // worked, so there is no signal to tune against.
+    if (honeypot.current?.value) {
+      setStatus('sent');
+      say(`Thanks — we'll send an access code to ${value} shortly.`, 'ok');
+      return;
+    }
+
+    // The challenge can put a puzzle on screen, so this is the point where the
+    // visitor may have to do something. The button reflects that.
+    setStatus('sending');
+    say('Checking…');
+
+    let token: string;
+    try {
+      token = IS_RECAPTCHA_V2
+        ? await (widget.current?.getToken() ??
+            Promise.reject(new Error('The spam check is not ready yet. Reload the page.')))
+        : await executeV3('access_request');
+    } catch (err) {
+      setStatus('error');
+      widget.current?.reset();
+      say(err instanceof Error ? err.message : 'The spam check did not complete.', 'err');
+      return;
+    }
+
+    say('Sending…');
+
+    try {
+      const response = await fetch(ACCESS_REQUEST_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ email: value, recaptchaToken: token }),
+      });
+
+      // The API returns OperationResult on this endpoint, which means a REJECTED
+      // request still comes back HTTP 200 with { isSuccess: false, message }.
+      // Checking response.ok alone would report every rejection - including
+      // "already invited" - as a success. Both have to be checked.
+      let payload: { isSuccess?: boolean; message?: string } | null = null;
+      try {
+        payload = await response.json();
+      } catch {
+        // 429 from the rate limiter and 5xx have no JSON body; handled below.
+      }
+
+      if (!response.ok || payload?.isSuccess === false) {
+        setStatus('error');
+        // A v2 token is single-use, so a retry needs a fresh one.
+        widget.current?.reset();
+
+        // The API's own message is written for the reader ("already invited, check
+        // your spam folder"), so it is shown as-is. Only when there is none does a
+        // generic message stand in.
+        const detail =
+          typeof payload?.message === 'string' && payload.message.trim() ? payload.message : '';
+        const fallback =
+          response.status === 429
+            ? 'Too many attempts. Wait a minute and try again.'
+            : `That didn't send. Try again, or email ${COMPANY.email} and we'll add you by hand.`;
+        say(detail || fallback, 'err');
+        return;
+      }
+
+      setStatus('sent');
+      say(`Thanks — we'll send an access code to ${value} shortly.`, 'ok');
+    } catch {
+      setStatus('error');
+      widget.current?.reset();
+      say(`That didn't send. Try again, or email ${COMPANY.email} and we'll add you by hand.`, 'err');
+    }
+  };
+
+  return (
+    <div className="closer" id="join">
+      <p>Send us your email, and we will respond shortly with an access code to the Suite Level platform.</p>
+
+      <form onSubmit={onSubmit} noValidate>
+        {/* The input and button are removed on success, leaving the confirmation in
+            their place, exactly as the design does. */}
+        <div className="row" hidden={status === 'sent'}>
+          <input
+            id="access-email"
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="you@brokerage.com"
+            aria-label="Work email address"
+            aria-describedby="access-note"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (noteKind === 'err') say(RESTING);
+            }}
+            required
+          />
+          <button className="btn" type="submit" disabled={status === 'sending'}>
+            {status === 'sending' ? 'Sending…' : 'Request access'}
+          </button>
+        </div>
+
+        {/* v2 mount point. Invisible renders no box, so the container stays at zero
+            height and the layout is unchanged. */}
+        {IS_RECAPTCHA_V2 && (
+          <div
+            className={RECAPTCHA_VERSION === 'v2-invisible' ? 'captcha captcha-invisible' : 'captcha'}
+            ref={captchaRef}
+            hidden={status === 'sent'}
+          />
+        )}
+
+        {/* aria-live so the outcome reaches a screen reader: the confirmation
+            replaces the form rather than moving focus. */}
+        <p className={`note${noteKind ? ` ${noteKind}` : ''}`} id="access-note" aria-live="polite">
+          {note}
+        </p>
+        <p className="privacy">We only use your email to contact you about Suite Level.</p>
+
+        {/* Google's terms allow hiding the floating reCAPTCHA badge only if this
+            attribution is shown instead. globals.css hides the badge, so this line
+            is not optional and must stay visible whenever v2 invisible or v3 is in
+            use. */}
+        {RECAPTCHA_VERSION !== 'v2-checkbox' && (
+          <p className="recaptcha-terms">
+            Protected by reCAPTCHA. Google&rsquo;s{' '}
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+              Privacy Policy
+            </a>{' '}
+            and{' '}
+            <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">
+              Terms of Service
+            </a>{' '}
+            apply.
+          </p>
+        )}
+
+        <input
+          type="text"
+          name="_gotcha"
+          ref={honeypot}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+        />
+      </form>
+    </div>
+  );
+}

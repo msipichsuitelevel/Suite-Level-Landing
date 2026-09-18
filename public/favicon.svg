@@ -1,0 +1,14 @@
+<svg width="100%" height="100%" viewBox="25 25 190 190" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <!-- Suite Level mark: three bars + orange peg. Tight viewBox so the mark fills the tab.
+       Bars adapt to the tab theme: grey on light, white on dark. Peg stays orange. -->
+  <style>
+    .bar { fill: #585856; }
+    @media (prefers-color-scheme: dark) {
+      .bar { fill: #FFFFFF; }
+    }
+  </style>
+  <rect class="bar" x="30" y="54" width="180" height="34" rx="17" />
+  <rect class="bar" x="30" y="103" width="180" height="34" rx="17" />
+  <rect class="bar" x="30" y="152" width="116" height="34" rx="17" />
+  <rect x="158" y="152" width="52" height="34" rx="17" fill="#F19220" />
+</svg>

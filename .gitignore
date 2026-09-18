@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Real configuration values never enter the repository. `.env.example` carries
+# the placeholders; every real value is set at build time on the build machine.
+.env
+.env.local
+.env.*.local
+
+.DS_Store
+npm-debug.log*
+yarn-error.log*
+
+# bun only, matching the Suite Level client. A second lockfile means two
+# dependency graphs and a build that differs from CI.
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
