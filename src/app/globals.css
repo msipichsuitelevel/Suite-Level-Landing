@@ -997,25 +997,9 @@
 /* The address can be long and must not push the panel sideways on a phone. */
 .closer .sent .sent-to { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
 
-/* The spam note earns its own block: a filtered invitation is the single most
-   likely reason someone thinks this did not work, and it is what they will be
-   told if they submit the address again. */
-.closer .sent-spam {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  margin-top: 16px;
-  padding: 11px 13px;
-  border: 1px solid var(--ok-ln);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, .6);
-}
-.closer .sent-spam svg { flex: none; width: 15px; height: 15px; margin-top: 2px; color: var(--ok); display: block; }
-.closer .sent-spam p { font-size: 13.5px; margin-top: 0; color: var(--ink-2); }
-.closer .sent-spam strong { color: var(--ink); font-weight: 600; }
-
-.closer .sent-foot { font-size: 12.5px; color: var(--ink-3); margin-top: 14px; }
-.closer .sent-foot a { color: var(--ok); text-decoration: underline; }
+/* A filtered invitation is the likeliest reason someone thinks this did not
+   work, so it is worth one line - and only one. */
+.closer .sent-spam { font-size: 13.5px; color: var(--ink-3); margin-top: 10px; }
 
 /* ---------------- legal pages ----------------
    The Privacy Policy. One narrow measure on the same slate
