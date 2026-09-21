@@ -78,6 +78,12 @@ export default function PrivacyPolicyPage() {
             extraction.
           </li>
           <li>
+            <strong>Access requests:</strong> if you ask for access on our website, your email
+            address, the name you give us if any, and the IP address the request came from. We
+            keep these so we can send you an invitation and so the same address is not invited
+            twice.
+          </li>
+          <li>
             <strong>Messages to us:</strong> anything you send when you contact us for support.
           </li>
         </ul>
@@ -189,7 +195,8 @@ export default function PrivacyPolicyPage() {
           </li>
           <li>
             <strong>Google</strong>: maps, address suggestions, turning property addresses into map
-            locations, web fonts, and reCAPTCHA on our public access-request form
+            locations, web fonts, and reCAPTCHA, which checks that a request for access comes from
+            a person and not a bot
           </li>
           <li>
             <strong>Sentry</strong>: error monitoring and session replay
@@ -224,8 +231,9 @@ export default function PrivacyPolicyPage() {
           Suite Level does not use cookies to sign you in or to track you. Instead, your browser
           stores your sign-in token, your basic profile and your display preferences in local
           storage on your device. If you choose &ldquo;Remember me,&rdquo; it also stores your email
-          address. Signing out removes the sign-in token and profile. Google Maps, reCAPTCHA and our
-          other providers may set their own cookies under their own privacy policies.
+          address. Signing out removes the sign-in token and profile. Google Maps and our other
+          providers, including reCAPTCHA on our public website, may set their own cookies under
+          their own privacy policies.
         </p>
       </section>
 
@@ -233,6 +241,11 @@ export default function PrivacyPolicyPage() {
         <h2>8. How long we keep information</h2>
         <ul>
           <li>We keep account information while your account is active.</li>
+          <li>
+            <strong>Access requests:</strong> we keep a request for access until the invitation is
+            used or we no longer need it, so that we can tell an address that has already been
+            invited from a new one. Ask us at <Contact /> to remove yours.
+          </li>
           <li>
             <strong>When you delete your account</strong> in Settings, we end your access right away
             and erase your account details: your name, email address, phone number and password.
@@ -318,7 +331,7 @@ export default function PrivacyPolicyPage() {
         </ul>
         <p>
           We collect this information from you, from your team (for example, when you are invited),
-          and automatically as you use Suite Level. We use it for the purposes in section 3 and
+          from the access request form on our website, and automatically as you use Suite Level. We use it for the purposes in section 3 and
           disclose it to the service providers in section 5. We do not sell or share personal
           information for cross-context behavioral advertising, and we have not done so in the past
           12 months. We do not knowingly collect personal information of anyone under 16.
