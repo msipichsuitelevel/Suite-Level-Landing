@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 
+import { DevTools } from '@/components/DevTools';
 import { COMPANY, SITE_URL } from '@/lib/site';
 import './globals.css';
 
@@ -155,6 +156,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SiteJsonLd />
         {children}
+        {/* Stripped from production builds: NODE_ENV is inlined, so this folds
+            to false and the component and its import are dropped. */}
+        {process.env.NODE_ENV === 'development' && <DevTools />}
       </body>
     </html>
   );
