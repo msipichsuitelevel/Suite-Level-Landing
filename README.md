@@ -8,30 +8,21 @@ files and served by IIS. There is no Node process in production.
 ```bash
 bun install
 cp .env.example .env.local     # then fill in the values
-bun run dev                    # http://localhost:3007
+bun run dev                    # prints the URL it bound to
 ```
 
-Ports are pinned on purpose, and they matter more than they look.
+Both commands print the URL they bound to. Next tries 3000 and moves to the
+next free port if something else holds it, saying so and naming the process:
 
-| command | port | what it serves |
-|---|---|---|
-| `bun run dev` | 3007 | the dev server. **react-grab only works here.** |
-| `bun run start` | 3008 | a fresh production build of `out/` |
+    ⚠ Port 3000 is in use by process 92978, using available port 3001 instead.
+    - Local:  http://localhost:3001
 
-Left unpinned, Next takes the first free port and silently moves, so you end up
-looking at a different app on this machine and conclude the site is broken.
-3000, 3002 and 5173 are all taken by other things here.
-
-`bun run start` rebuilds before serving. It used to serve whatever was already
-in `out/`, which looks identical to the real site but is a stale production
-bundle - and production has the dev tooling stripped out, so nothing you change
-in the source shows up and `window.__REACT_GRAB__` is undefined. If you are
-debugging anything to do with react-grab, you want **3007**, not 3008.
-
-react-grab runs in development only: pick an element and hand it to a coding
-agent. It is guarded by `NODE_ENV` inside `src/components/DevTools.tsx`, which
-Next folds away at build time, so `out/` contains no trace of it. If you are
-looking for it on a built or deployed copy, that is why it is not there.
+Read that line rather than assuming 3000. Other things on a dev machine sit on
+3000, and `bun run start` serves a **production** build, where react-grab and
+anything else behind a NODE_ENV check is stripped out. If
+`window.__REACT_GRAB__` is undefined, check which of the two you are looking at
+before anything else: on a production build it always will be, and editing the
+source will appear to do nothing because nothing rebuilds.
 
 ## Build and deploy
 
