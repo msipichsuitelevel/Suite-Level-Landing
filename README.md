@@ -8,13 +8,25 @@ files and served by IIS. There is no Node process in production.
 ```bash
 bun install
 cp .env.example .env.local     # then fill in the values
-bun run dev                    # http://localhost:3002
+bun run dev                    # http://localhost:3007
 ```
 
-The dev port is pinned to **3002** on purpose. Left unpinned, Next takes the
-first free port, so it silently moves to 3001 or 3002 when something else holds
-3000 and you end up looking at a different app. 3000 belongs to the checaturno
-landing and 5173 to the Suite Level client.
+Ports are pinned on purpose, and they matter more than they look.
+
+| command | port | what it serves |
+|---|---|---|
+| `bun run dev` | 3007 | the dev server. **react-grab only works here.** |
+| `bun run start` | 3008 | a fresh production build of `out/` |
+
+Left unpinned, Next takes the first free port and silently moves, so you end up
+looking at a different app on this machine and conclude the site is broken.
+3000, 3002 and 5173 are all taken by other things here.
+
+`bun run start` rebuilds before serving. It used to serve whatever was already
+in `out/`, which looks identical to the real site but is a stale production
+bundle - and production has the dev tooling stripped out, so nothing you change
+in the source shows up and `window.__REACT_GRAB__` is undefined. If you are
+debugging anything to do with react-grab, you want **3007**, not 3008.
 
 react-grab runs in development only: pick an element and hand it to a coding
 agent. It is guarded by `NODE_ENV` inside `src/components/DevTools.tsx`, which

@@ -7,20 +7,24 @@ import { useEffect } from 'react';
  * index.html, where the same package is loaded behind Vite's `import.meta.env.DEV`.
  *
  * react-grab lets you pick an element on the page and hand it to a coding agent.
- * It is a devDependency and must never reach the exported site: the export is
- * served as plain files from IIS, so anything that lands in `out/` is public.
+ * It must never reach the exported site: the export is served as plain files
+ * from IIS, so anything that lands in `out/` is public.
  *
- * Two guards, because this ships to production as static files and a runtime-only
- * check would still leave the chunk in `out/`:
- *   - layout.tsx only renders this component when NODE_ENV is development, and
- *   - the dynamic import sits inside a NODE_ENV branch here.
- * Next inlines NODE_ENV at build time, so in a production build both fold to
- * `false` and the import is dropped rather than merely skipped.
+ * The NODE_ENV check below is the only guard, and it is enough. Next inlines
+ * NODE_ENV at build time, so a production build folds it to `false` and drops
+ * the import rather than merely skipping it - verified by grepping `out/` for
+ * react-grab after a clean build. The component is therefore mounted
+ * unconditionally in layout.tsx, matching the checaturno landing this is copied
+ * from.
+ *
+ * Note for anyone putting a breakpoint here: this runs once, on mount. Chrome
+ * ignores `debugger` when DevTools is closed, so open DevTools FIRST and then
+ * reload - opening it afterwards is too late, the effect has already run.
  */
 export function DevTools() {
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      // Swallow the failure: a missing dev tool must never break the page.
+      // Swallowed: a missing dev tool must never break the page.
       import('@gusb.dev/react-grab').catch(() => {});
     }
   }, []);
