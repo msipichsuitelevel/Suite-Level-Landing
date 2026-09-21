@@ -24,6 +24,7 @@ type Status = 'idle' | 'sending' | 'sent' | 'error';
 export function AccessForm() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<Status>('idle');
+  const [sentTo, setSentTo] = useState('');
   const [note, setNote] = useState(RESTING);
   const [noteKind, setNoteKind] = useState<'' | 'err' | 'ok'>('');
 
@@ -36,11 +37,18 @@ export function AccessForm() {
   // remount, so the second pass is skipped instead of throwing.
   const rendered = useRef(false);
   const honeypot = useRef<HTMLInputElement | null>(null);
+  // Focus moves to the confirmation: the form it replaces is gone, so without
+  // this a keyboard or screen reader user is left on a detached element.
+  const sentHeading = useRef<HTMLHeadingElement | null>(null);
 
   const say = (text: string, kind: '' | 'err' | 'ok' = '') => {
     setNote(text);
     setNoteKind(kind);
   };
+
+  useEffect(() => {
+    if (status === 'sent') sentHeading.current?.focus();
+  }, [status]);
 
   useEffect(() => {
     if (!IS_RECAPTCHA_V2) return;
@@ -79,8 +87,8 @@ export function AccessForm() {
     // Hidden from people, filled in by the simplest bots. Answer as though it
     // worked, so there is no signal to tune against.
     if (honeypot.current?.value) {
+      setSentTo(value);
       setStatus('sent');
-      say(`Thanks — we'll send an access code to ${value} shortly.`, 'ok');
       return;
     }
 
@@ -140,8 +148,8 @@ export function AccessForm() {
         return;
       }
 
+      setSentTo(value);
       setStatus('sent');
-      say(`Thanks — we'll send an access code to ${value} shortly.`, 'ok');
     } catch {
       setStatus('error');
       widget.current?.reset();
@@ -149,14 +157,51 @@ export function AccessForm() {
     }
   };
 
+  if (status === 'sent') {
+    return (
+      <div className="closer is-sent" id="join" role="status">
+        <div className="sent">
+          <span className="sent-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12.5 9.5 18 20 6.5" />
+            </svg>
+          </span>
+
+          <div className="sent-body">
+            <h3 tabIndex={-1} ref={sentHeading}>
+              Check your inbox
+            </h3>
+            <p>
+              We sent an access code to <span className="sent-to">{sentTo}</span>. Use it on the
+              signup page to create your account.
+            </p>
+
+            <div className="sent-spam">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+              </svg>
+              <p>
+                <strong>Not there in a minute? Check your spam folder.</strong> This is the first
+                mail we send to an address, which is exactly what filters hold back.
+              </p>
+            </div>
+
+            <p className="sent-foot">
+              Still nothing? Email <a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a> and
+              we&rsquo;ll add you by hand.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="closer" id="join">
       <p>Send us your email, and we will respond shortly with an access code to the Suite Level platform.</p>
 
       <form onSubmit={onSubmit} noValidate>
-        {/* The input and button are removed on success, leaving the confirmation in
-            their place, exactly as the design does. */}
-        <div className="row" hidden={status === 'sent'}>
+        <div className="row">
           <input
             id="access-email"
             type="email"
@@ -183,7 +228,6 @@ export function AccessForm() {
           <div
             className={RECAPTCHA_VERSION === 'v2-invisible' ? 'captcha captcha-invisible' : 'captcha'}
             ref={captchaRef}
-            hidden={status === 'sent'}
           />
         )}
 

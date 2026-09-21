@@ -32,6 +32,12 @@
     --accent-h:  #D97F14;
     --accent-sf: #FDF1E1;
     --accent-ln: #F2C089;
+
+    /* Success. Green enough to read as "done" at a glance, muted enough to sit
+       on the same canvas as the orange without fighting it. */
+    --ok:        #156B48;
+    --ok-sf:     #EAF5EF;
+    --ok-ln:     #A9D4BC;
     --on-accent: #2E2E2B;
     --mark:      #585856;
 
@@ -935,6 +941,81 @@
    hiding it only while the page shows the reCAPTCHA attribution text instead,
    and that text has been removed, so the badge is what keeps this compliant.
    Do not add `visibility: hidden` here without putting the attribution back. */
+
+/* ---------------- access request: success ----------------
+   The whole panel is replaced on success rather than a line of text swapped
+   underneath the form. The request is the one thing this page asks for, so
+   completing it should look like an outcome, not a status line.
+
+   Every rule here is scoped under .closer, because the panel sets
+   `.closer p { font-size: 16px }` and a bare class loses to it. */
+.closer.is-sent {
+  border-color: var(--ok-ln);
+  background: var(--ok-sf);
+}
+
+.closer .sent {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+@media (max-width: 520px) {
+  .closer .sent { gap: 13px; }
+}
+
+.closer .sent-mark {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--ok);
+  color: #FFFFFF;
+  display: grid;
+  place-items: center;
+  /* A tick that draws itself once, so the outcome registers as having just
+     happened. The global reduced-motion rule switches it off. */
+  animation: sent-pop .28s cubic-bezier(.2, .9, .3, 1.2) both;
+}
+.closer .sent-mark svg { display: block; width: 19px; height: 19px; }
+.closer .sent-mark path {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  animation: sent-tick .3s .16s ease-out forwards;
+}
+@keyframes sent-pop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes sent-tick { to { stroke-dashoffset: 0; } }
+
+.closer .sent-body { min-width: 0; }
+.closer .sent h3 {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 21px;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+}
+.closer .sent p { font-size: 15px; margin-top: 9px; max-width: 46ch; }
+/* The address can be long and must not push the panel sideways on a phone. */
+.closer .sent .sent-to { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
+
+/* The spam note earns its own block: a filtered invitation is the single most
+   likely reason someone thinks this did not work, and it is what they will be
+   told if they submit the address again. */
+.closer .sent-spam {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding: 11px 13px;
+  border: 1px solid var(--ok-ln);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, .6);
+}
+.closer .sent-spam svg { flex: none; width: 15px; height: 15px; margin-top: 2px; color: var(--ok); display: block; }
+.closer .sent-spam p { font-size: 13.5px; margin-top: 0; color: var(--ink-2); }
+.closer .sent-spam strong { color: var(--ink); font-weight: 600; }
+
+.closer .sent-foot { font-size: 12.5px; color: var(--ink-3); margin-top: 14px; }
+.closer .sent-foot a { color: var(--ok); text-decoration: underline; }
 
 /* ---------------- legal pages ----------------
    The Privacy Policy. One narrow measure on the same slate
