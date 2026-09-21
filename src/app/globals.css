@@ -931,23 +931,10 @@
 .closer .row { margin-bottom: 0; }
 .closer .note { margin-top: 12px; }
 
-/* v2 invisible and v3 both float a reCAPTCHA badge over the bottom-right corner,
-   where it covers the page's own bottom fade and sits on top of the footer.
-   Google permits hiding it ONLY if the page shows the reCAPTCHA attribution
-   instead, which AccessForm renders as .recaptcha-terms. Removing that line
-   without un-hiding this badge would breach Google's terms. */
-.grecaptcha-badge { visibility: hidden; }
-
-/* Scoped under .closer: the panel sets `.closer p { font-size: 16px }`, which is
-   more specific than a bare class and was winning, rendering this fine print at
-   body size. */
-.closer .recaptcha-terms {
-  font-size: 11px;
-  line-height: 1.5;
-  color: var(--ink-3);
-  margin-top: 10px;
-}
-.closer .recaptcha-terms a { text-decoration: underline; }
+/* The floating reCAPTCHA badge is deliberately NOT hidden. Google permits
+   hiding it only while the page shows the reCAPTCHA attribution text instead,
+   and that text has been removed, so the badge is what keeps this compliant.
+   Do not add `visibility: hidden` here without putting the attribution back. */
 
 /* ---------------- legal pages ----------------
    The Privacy Policy. One narrow measure on the same slate

@@ -31,6 +31,10 @@ export function AccessForm() {
   // variant draws its widget here.
   const captchaRef = useRef<HTMLDivElement | null>(null);
   const widget = useRef<V2Widget | null>(null);
+  // grecaptcha refuses to render twice into the same element, and React runs
+  // effects twice in development under StrictMode. A ref survives that simulated
+  // remount, so the second pass is skipped instead of throwing.
+  const rendered = useRef(false);
   const honeypot = useRef<HTMLInputElement | null>(null);
 
   const say = (text: string, kind: '' | 'err' | 'ok' = '') => {
@@ -40,26 +44,27 @@ export function AccessForm() {
 
   useEffect(() => {
     if (!IS_RECAPTCHA_V2) return;
-    let cancelled = false;
+    if (rendered.current) return;
+    rendered.current = true;
 
     // Rendered once, on mount, so the challenge is ready before anyone submits.
     // Rendering on submit instead would add a visible delay to every request.
     renderV2Widget(captchaRef.current!)
       .then((w) => {
-        if (cancelled) return;
         widget.current = w;
       })
-      .catch(() => {
-        if (cancelled) return;
+      .catch((err: unknown) => {
+        // Say what actually went wrong. Blaming an ad blocker unconditionally
+        // sent us hunting for one that was never there.
+        const reason = err instanceof Error ? err.message : String(err);
+        const blocked = /failed to load|never became ready/i.test(reason);
         say(
-          `The spam check could not load. Disable your ad blocker and reload, or email ${COMPANY.email} and we will add you by hand.`,
+          blocked
+            ? `The spam check could not load, which usually means a browser extension or network is blocking Google. Reload, or email ${COMPANY.email} and we will add you by hand.`
+            : `The spam check could not start (${reason}). Reload, or email ${COMPANY.email} and we will add you by hand.`,
           'err',
         );
       });
-
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -188,24 +193,6 @@ export function AccessForm() {
           {note}
         </p>
         <p className="privacy">We only use your email to contact you about Suite Level.</p>
-
-        {/* Google's terms allow hiding the floating reCAPTCHA badge only if this
-            attribution is shown instead. globals.css hides the badge, so this line
-            is not optional and must stay visible whenever v2 invisible or v3 is in
-            use. */}
-        {RECAPTCHA_VERSION !== 'v2-checkbox' && (
-          <p className="recaptcha-terms">
-            Protected by reCAPTCHA. Google&rsquo;s{' '}
-            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
-              Privacy Policy
-            </a>{' '}
-            and{' '}
-            <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">
-              Terms of Service
-            </a>{' '}
-            apply.
-          </p>
-        )}
 
         <input
           type="text"
