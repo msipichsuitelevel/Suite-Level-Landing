@@ -124,5 +124,5 @@ API rejects any other version. A material change has to land in the app first,
 bump `PRIVACY_POLICY_VERSION` and `PRIVACY_POLICY_LAST_UPDATED` there, and then
 be copied here with the `VERSION` constant updated to match.
 
-Terms of Service is not mirrored; the footer links to the application, which
-already serves it publicly.
+There is no Terms of Service page or link here. The application serves its own
+terms; this site does not point at them.

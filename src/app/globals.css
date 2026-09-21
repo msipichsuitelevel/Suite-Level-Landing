@@ -950,7 +950,7 @@
 .closer .recaptcha-terms a { text-decoration: underline; }
 
 /* ---------------- legal pages ----------------
-   Privacy Policy and Terms of Service. One narrow measure on the same slate
+   The Privacy Policy. One narrow measure on the same slate
    canvas, so they read as part of the site rather than a bare document. */
 .legal { max-width: 78ch; padding-block: clamp(48px, 7vw, 96px); }
 .legal h1 {

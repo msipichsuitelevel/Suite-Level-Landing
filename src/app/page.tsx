@@ -5,7 +5,7 @@ import { FeatureSwitch } from '@/components/FeatureSwitch';
 import { LogoDefs } from '@/components/Logo';
 import { Rail } from '@/components/Rail';
 import { FAQ, FOUNDERS } from '@/lib/content';
-import { APP_URL, SITE_URL } from '@/lib/site';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
@@ -189,9 +189,6 @@ export default function HomePage() {
             <span>&copy; {new Date().getFullYear()} Suite Level, Inc.</span>
             <nav>
               <a href="/privacy-policy/">Privacy Policy</a>
-              {/* Only the Privacy Policy is mirrored here; the Terms live in the
-                  application, which already serves them publicly. */}
-              <a href={`${APP_URL}/terms-of-service`}>Terms of Service</a>
               <a href="mailto:operations@suite-level.com">Contact</a>
             </nav>
           </div>

@@ -1,5 +1,4 @@
 import { LogoDefs, Logo } from '@/components/Logo';
-import { APP_URL } from '@/lib/site';
 
 /**
  * Shell for the Privacy Policy and Terms pages: the mark, a way back, and one
@@ -35,7 +34,6 @@ export function LegalPage({
           <nav>
             <a href="/">Home</a>
             <a href="/privacy-policy/">Privacy Policy</a>
-            <a href={`${APP_URL}/terms-of-service`}>Terms of Service</a>
           </nav>
         </div>
       </div>
