@@ -8,8 +8,18 @@ files and served by IIS. There is no Node process in production.
 ```bash
 bun install
 cp .env.example .env.local     # then fill in the values
-bun run dev                    # http://localhost:3000
+bun run dev                    # http://localhost:3002
 ```
+
+The dev port is pinned to **3002** on purpose. Left unpinned, Next takes the
+first free port, so it silently moves to 3001 or 3002 when something else holds
+3000 and you end up looking at a different app. 3000 belongs to the checaturno
+landing and 5173 to the Suite Level client.
+
+react-grab runs in development only: pick an element and hand it to a coding
+agent. It is guarded by `NODE_ENV` inside `src/components/DevTools.tsx`, which
+Next folds away at build time, so `out/` contains no trace of it. If you are
+looking for it on a built or deployed copy, that is why it is not there.
 
 ## Build and deploy
 

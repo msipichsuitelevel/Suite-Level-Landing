@@ -156,9 +156,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SiteJsonLd />
         {children}
-        {/* Stripped from production builds: NODE_ENV is inlined, so this folds
-            to false and the component and its import are dropped. */}
-        {process.env.NODE_ENV === 'development' && <DevTools />}
+        <DevTools />
       </body>
     </html>
   );

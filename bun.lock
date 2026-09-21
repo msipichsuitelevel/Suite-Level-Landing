@@ -5,12 +5,12 @@
     "": {
       "name": "suite-level-landing",
       "dependencies": {
+        "@gusb.dev/react-grab": "^0.0.69",
         "next": "^16.3.5",
         "react": "^19.3.0",
         "react-dom": "^19.3.0",
       },
       "devDependencies": {
-        "@gusb.dev/react-grab": "^0.0.69",
         "@types/node": "^24.5.2",
         "@types/react": "^19.1.9",
         "@types/react-dom": "^19.1.9",

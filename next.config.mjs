@@ -5,6 +5,12 @@ const nextConfig = {
   // rendering, route handlers, middleware, or ISR.
   output: 'export',
 
+  // This directory sits beside ../api and ../app, each with its own lockfile.
+  // Turbopack finds the workspace root by walking up until it hits one, so
+  // without this it can decide the root is the parent folder and resolve
+  // modules from the wrong tree.
+  turbopack: { root: import.meta.dirname },
+
   // IIS serves a directory by its default document. With trailing slashes every
   // route becomes `<route>/index.html`, which IIS resolves without the URL
   // Rewrite module being installed.
