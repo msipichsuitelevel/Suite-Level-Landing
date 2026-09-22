@@ -10,6 +10,21 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
+function validateName(value: string): string {
+  const v = value.trim();
+  if (!v) return 'Enter your full name.';
+  if (v.length < 2) return 'That name looks too short.';
+  if (v.length > 200) return 'That name is too long.';
+  return '';
+}
+
+function validateEmail(value: string): string {
+  const v = value.trim();
+  if (!v) return 'Enter your email address.';
+  if (!EMAIL_RE.test(v)) return 'That email address looks incomplete.';
+  return '';
+}
+
 /**
  * The access-request form. The address is posted to the Suite Level API, which
  * records it, mints an invite token and emails it. The API is the only thing that
@@ -26,6 +41,14 @@ export function AccessForm() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [sentTo, setSentTo] = useState('');
+  // A field shows its error once it has been left (blur) or the form submitted, and
+  // from then on updates as you type - so the error clears the moment it is fixed,
+  // but nobody is scolded for a field they have not finished yet.
+  const [touched, setTouched] = useState({ name: false, email: false });
+  const nameError = touched.name ? validateName(name) : '';
+  const emailError = touched.email ? validateEmail(email) : '';
+  const nameRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
   const [note, setNote] = useState(RESTING);
   const [noteKind, setNoteKind] = useState<'' | 'err' | 'ok'>('');
 
@@ -80,17 +103,17 @@ export function AccessForm() {
     e.preventDefault();
     if (status === 'sending') return;
 
-    const fullName = name.trim();
-    if (fullName.length < 2) {
-      say('Please enter your full name.', 'err');
+    // Every field shows its state at once, rather than one error per click.
+    setTouched({ name: true, email: true });
+    const nameProblem = validateName(name);
+    const emailProblem = validateEmail(email);
+    if (nameProblem || emailProblem) {
+      (nameProblem ? nameRef : emailRef).current?.focus();
       return;
     }
 
+    const fullName = name.trim();
     const value = email.trim();
-    if (!EMAIL_RE.test(value)) {
-      say('That email address looks incomplete. Check it and try again.', 'err');
-      return;
-    }
     // Hidden from people, filled in by the simplest bots. Answer as though it
     // worked, so there is no signal to tune against.
     if (honeypot.current?.value) {
@@ -203,38 +226,56 @@ export function AccessForm() {
         <div className="fields">
           <input
             id="access-name"
+            ref={nameRef}
             type="text"
             name="name"
             autoComplete="name"
             placeholder="Your full name"
             aria-label="Full name"
+            aria-invalid={nameError ? true : undefined}
+            aria-describedby={nameError ? 'access-name-error' : undefined}
             value={name}
             onChange={(e) => {
               setName(e.target.value);
               if (noteKind === 'err') say(RESTING);
             }}
+            onBlur={() => setTouched((t) => ({ ...t, name: true }))}
             required
           />
+          {nameError && (
+            <p className="field-err" id="access-name-error">
+              {nameError}
+            </p>
+          )}
+
           <div className="row">
             <input
               id="access-email"
+              ref={emailRef}
               type="email"
               name="email"
               autoComplete="email"
               placeholder="you@brokerage.com"
               aria-label="Work email address"
-              aria-describedby="access-note"
+              aria-invalid={emailError ? true : undefined}
+              aria-describedby={emailError ? 'access-email-error access-note' : 'access-note'}
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
                 if (noteKind === 'err') say(RESTING);
               }}
+              onBlur={() => setTouched((t) => ({ ...t, email: true }))}
               required
             />
             <button className="btn" type="submit" disabled={status === 'sending'}>
               {status === 'sending' ? 'Joining…' : 'Join the waitlist'}
             </button>
           </div>
+          {emailError && (
+            <p className="field-err" id="access-email-error">
+              {emailError}
+            </p>
+          )}
         </div>
 
         {/* v2 mount point. Invisible renders no box, so the container stays at zero
