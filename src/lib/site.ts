@@ -61,6 +61,6 @@ export const SECTIONS = [
   { id: 'product', label: 'Platform' },
   { id: 'share', label: 'Collaborate' },
   { id: 'who', label: 'Who we are' },
-  { id: 'access', label: 'Early access' },
+  { id: 'access', label: 'Join the beta' },
   { id: 'faq', label: 'FAQ' },
 ] as const;

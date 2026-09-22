@@ -853,7 +853,11 @@
   .closer h2 { font-family: var(--cond); font-weight: 700; font-size: clamp(26px, 3.4vw, 38px); letter-spacing: -0.03em; margin-top: 12px; max-width: 18ch; }
   .closer p { font-size: 16px; margin-top: 12px; max-width: 48ch; }
   .closer > p:first-child { margin-top: 0; }
+  .closer .fields { margin-top: 22px; max-width: 480px; }
+  .closer .fields .row { margin-top: 7px; }
   .closer .row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 22px; max-width: 480px; }
+  /* The name field spans the same measure as the row beneath it. */
+  .closer #access-name { display: block; width: 100%; }
   .closer input {
     flex: 1 1 200px; min-width: 0;
     font-family: var(--sans); font-size: 15px; color: var(--ink);
@@ -863,6 +867,7 @@
   }
   .closer .note { font-size: 12px; }
   .closer .privacy { font-size: 11px; margin-top: 2px; }
+  .closer .privacy a { color: var(--accent-h); text-decoration: underline; }
   .closer input::placeholder { color: var(--ink-3); }
   .closer input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(241,146,32,.24); }
 

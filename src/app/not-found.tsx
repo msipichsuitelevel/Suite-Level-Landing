@@ -26,7 +26,7 @@ export default function NotFound() {
         </p>
         <p>
           <a className="btn" href="/#join" style={{ marginTop: 18 }}>
-            Request access
+            Join the waitlist
           </a>
         </p>
       </div>

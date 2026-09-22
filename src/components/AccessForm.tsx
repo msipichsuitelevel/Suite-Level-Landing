@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ACCESS_REQUEST_ENDPOINT, COMPANY, IS_RECAPTCHA_V2, RECAPTCHA_VERSION } from '@/lib/site';
 import { executeV3, renderV2Widget, type V2Widget } from '@/lib/recaptcha';
 
-const RESTING = 'No contract required. Free during the beta.';
+const RESTING = 'Free during the beta. No contract, no card.';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
@@ -22,6 +22,7 @@ type Status = 'idle' | 'sending' | 'sent' | 'error';
  * await a token rather than read one that is already sitting there.
  */
 export function AccessForm() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [sentTo, setSentTo] = useState('');
@@ -79,6 +80,12 @@ export function AccessForm() {
     e.preventDefault();
     if (status === 'sending') return;
 
+    const fullName = name.trim();
+    if (fullName.length < 2) {
+      say('Please enter your full name.', 'err');
+      return;
+    }
+
     const value = email.trim();
     if (!EMAIL_RE.test(value)) {
       say('That email address looks incomplete. Check it and try again.', 'err');
@@ -116,7 +123,7 @@ export function AccessForm() {
       const response = await fetch(ACCESS_REQUEST_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ email: value, recaptchaToken: token }),
+        body: JSON.stringify({ name: fullName, email: value, recaptchaToken: token }),
       });
 
       // The API returns OperationResult on this endpoint, which means a REJECTED
@@ -169,15 +176,15 @@ export function AccessForm() {
 
           <div className="sent-body">
             <h3 tabIndex={-1} ref={sentHeading}>
-              Check your inbox
+              You&rsquo;re on the waitlist
             </h3>
             <p>
-              We sent an access code to <span className="sent-to">{sentTo}</span>. Use it on the
-              signup page to create your account.
+              We have your details and will email <span className="sent-to">{sentTo}</span> when a
+              place opens up.
             </p>
 
             <p className="sent-spam">
-              Remember to check your spam folder if it doesn&rsquo;t arrive.
+              We are letting people in a few at a time, so this may take a little while.
             </p>
           </div>
         </div>
@@ -187,28 +194,47 @@ export function AccessForm() {
 
   return (
     <div className="closer" id="join">
-      <p>Send us your email, and we will respond shortly with an access code to the Suite Level platform.</p>
+      <p>
+        Join the waitlist. We are letting brokers in a few at a time, so we can work closely with
+        everyone on it. Tell us who you are and we will be in touch when there is a place for you.
+      </p>
 
       <form onSubmit={onSubmit} noValidate>
-        <div className="row">
+        <div className="fields">
           <input
-            id="access-email"
-            type="email"
-            name="email"
-            autoComplete="email"
-            placeholder="you@brokerage.com"
-            aria-label="Work email address"
-            aria-describedby="access-note"
-            value={email}
+            id="access-name"
+            type="text"
+            name="name"
+            autoComplete="name"
+            placeholder="Your full name"
+            aria-label="Full name"
+            value={name}
             onChange={(e) => {
-              setEmail(e.target.value);
+              setName(e.target.value);
               if (noteKind === 'err') say(RESTING);
             }}
             required
           />
-          <button className="btn" type="submit" disabled={status === 'sending'}>
-            {status === 'sending' ? 'Sending…' : 'Request access'}
-          </button>
+          <div className="row">
+            <input
+              id="access-email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              placeholder="you@brokerage.com"
+              aria-label="Work email address"
+              aria-describedby="access-note"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (noteKind === 'err') say(RESTING);
+              }}
+              required
+            />
+            <button className="btn" type="submit" disabled={status === 'sending'}>
+              {status === 'sending' ? 'Joining…' : 'Join the waitlist'}
+            </button>
+          </div>
         </div>
 
         {/* v2 mount point. Invisible renders no box, so the container stays at zero
@@ -225,7 +251,10 @@ export function AccessForm() {
         <p className={`note${noteKind ? ` ${noteKind}` : ''}`} id="access-note" aria-live="polite">
           {note}
         </p>
-        <p className="privacy">We only use your email to contact you about Suite Level.</p>
+        <p className="privacy">
+          We only use your details to contact you about Suite Level. By joining you agree to our{' '}
+          <a href="/privacy-policy/">Privacy Policy</a>.
+        </p>
 
         <input
           type="text"

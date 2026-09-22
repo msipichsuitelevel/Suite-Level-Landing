@@ -76,7 +76,7 @@ export function Rail() {
 
         <div className="rail-cta">
           <a className="btn btn-block" href="#join">
-            Request access
+            Join the waitlist
           </a>
           <a className="rail-signin" href={`${APP_URL}/auth`}>
             Already have an account? Sign in

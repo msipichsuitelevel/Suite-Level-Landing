@@ -155,13 +155,14 @@ export default function HomePage() {
 
             <section className="sec" id="access">
               <div className="sec-head">
-                <span className="sec-badge">Early access</span>
+                <span className="sec-badge">Join the beta</span>
                 <span className="rule" />
               </div>
-              <h2>Get in before launch.</h2>
+              <h2>Join the private beta.</h2>
               <p className="intro">
-                Suite Level is in private beta. Joining now gives you access to the platform free of
-                charge before it reaches the market, and you get to help shape what it becomes.
+                Suite Level is in private beta and we are keeping it small on purpose, so we can
+                work closely with everyone on it. Places are free while the beta runs, and the
+                brokers in it shape what gets built next.
               </p>
 
               <AccessForm />
@@ -172,7 +173,7 @@ export default function HomePage() {
                 <span className="sec-badge">FAQ</span>
                 <span className="rule" />
               </div>
-              <h2>Before you request access.</h2>
+              <h2>Before you join.</h2>
 
               <div className="qa">
                 {FAQ.map((item, i) => (
