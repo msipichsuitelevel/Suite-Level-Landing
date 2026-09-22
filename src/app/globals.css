@@ -929,17 +929,6 @@
 }
 .skip-link:focus { left: 8px; top: 8px; }
 
-/* Secondary link under the rail's call to action. */
-.rail-signin {
-  display: block;
-  margin-top: 10px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--rail-ink-2);
-  text-decoration: none;
-}
-.rail-signin:hover { color: var(--rail-ink); text-decoration: underline; }
-@media (max-width: 900px) { .rail-signin { display: none; } }
 
 /* ---------------- access request form ----------------
    The design posted to Formspree from an inline script. The real form posts to

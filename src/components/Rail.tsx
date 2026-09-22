@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Logo } from '@/components/Logo';
-import { APP_URL, SECTIONS } from '@/lib/site';
+import { SECTIONS } from '@/lib/site';
 
 const OFFSET = 120; // where the page "reads from" when deciding the current section
 
@@ -77,9 +77,6 @@ export function Rail() {
         <div className="rail-cta">
           <a className="btn btn-block" href="#join">
             Join the waitlist
-          </a>
-          <a className="rail-signin" href={`${APP_URL}/auth`}>
-            Already have an account? Sign in
           </a>
         </div>
       </aside>

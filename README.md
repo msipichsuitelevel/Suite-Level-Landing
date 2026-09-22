@@ -54,7 +54,6 @@ that way: **this repository is public.**
 |---|---|
 | `NEXT_PUBLIC_API_URL` | Suite Level API origin, no trailing slash |
 | `NEXT_PUBLIC_SITE_URL` | Canonical origin for this site; drives canonical URLs, the sitemap and OG tags |
-| `NEXT_PUBLIC_APP_URL` | The Suite Level application, for "Sign in" and the Terms link |
 | `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | reCAPTCHA **site** key. Public by design |
 | `NEXT_PUBLIC_RECAPTCHA_VERSION` | `v2-invisible` (what Suite Level uses), `v2-checkbox` or `v3` |
 
@@ -80,15 +79,14 @@ under the form. If you remove that line, un-hide the badge. Also make sure every
 is served from is listed in the reCAPTCHA admin console, including `localhost`
 for local work, or the widget will refuse to appear.
 
-## How the access-request flow works
+## How the waitlist works
 
-1. A visitor enters their email on the landing page and passes reCAPTCHA.
-2. `POST {API}/api/AccessRequest/Submit` verifies the token, records the
-   address, and emails an access code. The address is unique: asking twice
-   returns "already invited, check your spam folder" instead of a second email.
-3. The email links to `{app}/signup?code=...`.
-4. Signup asks for that code first, and the API refuses to create an account
-   without one that is unused and was issued to that exact address.
+1. A visitor enters their full name and email and passes reCAPTCHA.
+2. `POST {API}/api/AccessRequest/Submit` verifies the token and records the
+   request. The address is unique: joining twice returns "already on the
+   waitlist" rather than a second entry.
+3. Nothing is emailed to the visitor. The team is notified and decides who to
+   let in. This site does not link to the application at all.
 
 The endpoint returns `OperationResult`, so a **rejected** request still comes
 back as HTTP 200 with `isSuccess: false`. `src/components/AccessForm.tsx`

@@ -16,10 +16,6 @@ export const SITE_URL = trimSlash(
 
 export const API_URL = trimSlash(process.env.NEXT_PUBLIC_API_URL || '');
 
-export const APP_URL = trimSlash(
-  process.env.NEXT_PUBLIC_APP_URL || 'https://app.suite-level.com',
-);
-
 export const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
 
 /**
