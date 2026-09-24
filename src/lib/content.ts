@@ -168,6 +168,6 @@ export const FOUNDERS = [
   {
     name: 'Michael Sipich',
     role: 'Engineering & co-founder',
-    bio: 'Michael has spent over a decade building legal tech and finance software, and has led engineering teams in his recent roles. Now he leads the engineering behind Suite Level.',
+    bio: 'Michael has spent his career building software for the finance, legal, and tech industries. As a proven leader in tech, he now drives engineering at Suite Level.',
   },
 ];

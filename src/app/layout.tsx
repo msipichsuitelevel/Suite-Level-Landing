@@ -16,7 +16,7 @@ const inter = Inter({
   display: 'swap',
 });
 
-const TITLE = 'Suite Level: the CRE platform brokers run their market on';
+const TITLE = 'Suite Level | Your market. Your portfolio.';
 const DESCRIPTION =
   'Suite Level is where broker teams track tenants in the market, lease comps, market supply, competitive sets and stacking plans in one place, and share a live view with their clients. Private beta.';
 

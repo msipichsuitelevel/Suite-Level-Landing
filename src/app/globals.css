@@ -1003,10 +1003,6 @@
 /* The address can be long and must not push the panel sideways on a phone. */
 .closer .sent .sent-to { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
 
-/* A filtered invitation is the likeliest reason someone thinks this did not
-   work, so it is worth one line - and only one. */
-.closer .sent-spam { font-size: 13.5px; color: var(--ink-3); margin-top: 10px; }
-
 /* ---------------- legal pages ----------------
    The Privacy Policy. One narrow measure on the same slate
    canvas, so they read as part of the site rather than a bare document. */

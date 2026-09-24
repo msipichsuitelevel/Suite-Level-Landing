@@ -1,18 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 214 242" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <g transform="matrix(1,0,0,1,-18.365306,-4.252607)">
-        <g transform="matrix(1.38877,0,0,1.57702,-47.803964,-52.873372)">
-            <path d="M67.955,125.924L150.302,125.947L173.489,125.953C187.699,125.962 197.801,124.12 201.185,141.442C180.742,141.448 158.296,141.008 138.015,141.563C134.584,141.478 131.315,141.412 127.884,141.472C121.621,141.45 69.045,141.838 67.835,141.002L67.955,125.924Z" style="fill:rgb(242,145,0);fill-rule:nonzero;"/>
-            <path d="M77.135,173.587L152.08,173.556L173.769,173.56C187.797,173.563 198.089,171.941 201.195,189.177L118.141,189.234L91.139,189.243C88.876,189.245 77.774,189.736 76.766,188.67C77.216,185.053 77.096,177.538 77.135,173.587Z" style="fill:rgb(242,145,0);fill-rule:nonzero;"/>
-            <path d="M96.029,78.364L158.221,78.347C168.147,78.341 178.51,77.918 188.342,78.809C196.494,79.547 199.939,86.876 201.204,93.94L121.14,93.907C117.418,93.908 98.022,94.34 96.124,93.761L95.729,93.021C96.088,89.366 95.983,82.326 96.029,78.364Z" style="fill:rgb(242,145,0);fill-rule:nonzero;"/>
-            <path d="M68.118,102.15L125.312,102.133C132.608,102.126 140.148,102.239 147.426,102.142C158.652,101.991 164.555,105.454 165.198,117.628L97.33,117.691L77.534,117.725C75.422,117.731 69.492,117.881 67.606,117.639C67.651,115.449 67.499,103.35 68.118,102.15Z" style="fill:rgb(242,145,0);fill-rule:nonzero;"/>
-            <path d="M127.884,141.472C131.315,141.412 134.584,141.478 138.015,141.563C140.621,144.032 141.823,149.964 145.258,149.79C154.11,149.677 162.962,149.655 171.815,149.723C186.9,149.738 197.37,147.274 201.213,165.383L160.574,165.416C157.806,165.417 145.335,165.606 143.057,165.253C142.366,163.352 129.611,143.916 127.884,141.472Z" style="fill:rgb(242,145,0);fill-rule:nonzero;"/>
-            <path d="M127.884,141.472C131.315,141.412 134.584,141.478 138.015,141.563C140.621,144.032 141.823,149.964 145.258,149.79C144.766,149.892 143.883,149.955 143.774,150.301C142.639,153.909 143.274,161.472 143.057,165.253C142.366,163.352 129.611,143.916 127.884,141.472Z" style="fill:rgb(87,87,87);fill-rule:nonzero;"/>
-            <path d="M47.892,116.269C56.703,135.071 68.609,154.87 77.135,173.587C77.096,177.538 77.216,185.053 76.766,188.67C68.4,170.175 55.93,150.37 48.194,131.402C47.592,129.924 47.892,118.936 47.892,116.269Z" style="fill:rgb(87,87,87);fill-rule:nonzero;"/>
-            <path d="M72.88,36.224C79.211,48.053 85.927,59.723 92.326,71.519C93.525,73.729 95.178,76.038 96.029,78.364C95.983,82.326 96.088,89.366 95.729,93.021C92.141,87.806 74.336,55.91 73.157,51.101C72.085,46.724 72.858,40.806 72.88,36.224Z" style="fill:rgb(87,87,87);fill-rule:nonzero;"/>
-            <path d="M47.933,88.725C51.839,97.087 57.833,106.502 62.094,114.777C63.702,117.901 66.864,122.778 67.955,125.924L67.835,141.002C65.124,137.454 49.046,107.479 48.219,103.873C47.169,99.301 47.871,93.454 47.933,88.725Z" style="fill:rgb(87,87,87);fill-rule:nonzero;"/>
-            <path d="M47.895,65.719C50.733,70.806 65.368,99.406 68.118,102.15C67.499,103.35 67.651,115.449 67.606,117.639C63.867,111.166 49.235,85.538 48.11,80.062C47.216,75.707 47.902,70.228 47.895,65.719Z" style="fill:rgb(87,87,87);fill-rule:nonzero;"/>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 54 180 132" version="1.1">
+  <!-- The Suite Level mark: three bars and the orange peg. Same geometry as
+       `favicon.svg` and the client's SuiteLevelMark, but with literal `fill`
+       attributes instead of a `prefers-color-scheme` stylesheet, because this
+       file is only ever rasterised (by `scripts/generate-icons.mjs`) and the
+       renderer resolves no CSS media queries.
+
+       The viewBox is cropped to the ink rather than kept square, so the icon
+       script's own padding decides the whitespace and the bars stay legible at
+       16px. Changing the mark means re-running `bun run icons`. -->
+  <rect x="30" y="54" width="180" height="34" rx="17" fill="#585856" />
+  <rect x="30" y="103" width="180" height="34" rx="17" fill="#585856" />
+  <rect x="30" y="152" width="116" height="34" rx="17" fill="#585856" />
+  <rect x="158" y="152" width="52" height="34" rx="17" fill="#F19220" />
 </svg>

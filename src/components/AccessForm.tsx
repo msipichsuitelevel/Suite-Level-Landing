@@ -202,12 +202,8 @@ export function AccessForm() {
               You&rsquo;re on the waitlist
             </h3>
             <p>
-              We have your details and will email <span className="sent-to">{sentTo}</span> when a
-              place opens up.
-            </p>
-
-            <p className="sent-spam">
-              We are letting people in a few at a time, so this may take a little while.
+              Thanks, we have your request. We will send an activation link to{' '}
+              <span className="sent-to">{sentTo}</span> as soon as possible.
             </p>
           </div>
         </div>
@@ -218,8 +214,8 @@ export function AccessForm() {
   return (
     <div className="closer" id="join">
       <p>
-        Join the waitlist. We are letting brokers in a few at a time, so we can work closely with
-        everyone on it. Tell us who you are and we will be in touch when there is a place for you.
+        Join the waitlist. Tell us who you are and we will be in touch when there is a place for
+        you.
       </p>
 
       <form onSubmit={onSubmit} noValidate>
