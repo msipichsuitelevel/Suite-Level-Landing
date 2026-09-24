@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next build && bunx serve out",
+    "build:prod": "NEXT_PUBLIC_API_URL=https://app.suite-level.com/API NEXT_PUBLIC_SITE_URL=https://suite-level.com next build",
+    "start": "bunx serve out",
     "icons": "bun scripts/generate-icons.mjs"
   },
   "dependencies": {

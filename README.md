@@ -28,6 +28,7 @@ source will appear to do nothing because nothing rebuilds.
 
 ```bash
 bun run build                  # writes ./out
+bun run build:prod             # writes ./out for https://suite-level.com
 ```
 
 Deploy the **contents of `out/`** as the IIS site's physical directory.
@@ -44,6 +45,9 @@ Two things about the export worth knowing before changing anything:
 
 Every `NEXT_PUBLIC_*` value is **baked in at build time**. Changing one means
 rebuilding and redeploying; editing a file in `out/` will not do it.
+`build:prod` sets the production site and API URLs before building; it reads
+the public reCAPTCHA site key and version from the local, git-ignored
+`.env.local`. Check those values before each production build.
 
 ## Configuration
 
