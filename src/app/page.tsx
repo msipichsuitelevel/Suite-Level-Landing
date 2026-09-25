@@ -160,9 +160,8 @@ export default function HomePage() {
               </div>
               <h2>Join the private beta.</h2>
               <p className="intro">
-                Suite Level is in private beta and we are keeping it small on purpose, so we can
-                work closely with everyone on it. Places are free while the beta runs, and the
-                brokers in it shape what gets built next.
+                Suite Level is in private beta, and we are purposefully keeping users to a minimum
+                so we can work closely with everyone on it. Access is free during beta.
               </p>
 
               <AccessForm />
